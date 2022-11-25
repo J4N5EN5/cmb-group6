@@ -24,6 +24,8 @@ public class temp_agenda {
         // n -> 20% free time, 40% lecture, 40% tutorial... (n_free_time, n_lecture, n_tutorial) -> matrix with dim(hosts, len(agenda)) whith the location types in it...
         // iterate over it and fill in the different actual locatoins...
 
+        // Todo write agenda helper 3!!! (pls not fire me)
+
         int[][] agendaHelper = new int[n_hosts][n_timeslots];
         for(int i = 0; i < n_hosts; i++) {
             // choose first timeslot between 0-
@@ -79,6 +81,7 @@ public class temp_agenda {
 
 
     public int[] createAgendasStep2() {
+
 
     }
 
