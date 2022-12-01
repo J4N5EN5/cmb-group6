@@ -28,12 +28,19 @@ extends MovementModel {
   //==========================================================================//
   // Instance vars
   //==========================================================================//
-  final List <Coord> polygon = Arrays.asList(
+  /*final List <Coord> polygon = Arrays.asList(
       new Coord( 500, 250 ),
       new Coord( 250, 500 ),
       new Coord( 500, 750 ),
       new Coord( 750, 500 ),
       new Coord( 500, 250 )
+  );*/
+
+  final List <Coord> polygon = Arrays.asList(
+    new Coord( 100, 100 ),
+    new Coord( 100, 200 ),
+    new Coord( 200, 100 ),
+    new Coord( 200, 200 )
   );
 
   private Coord lastWaypoint;
