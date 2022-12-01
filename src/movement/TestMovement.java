@@ -94,7 +94,11 @@ public class TestMovement extends MovementModel{
             return;
         }
 
-        locs = deserialize(content);
+        // TODO: filter out vertices
+
+        locs = deserializeVertices(content);
+
+        // TODO: deserialize edges
 
         genesis = locs.get(0);
         current = locs.get(0);
@@ -132,7 +136,7 @@ public class TestMovement extends MovementModel{
         );
     }
 
-    private List<UniHub> deserialize(String jsonInput){
+    private List<UniHub> deserializeVertices(String jsonInput){
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
         gsonBuilder.registerTypeAdapter(Geometry.class, new GeometryDeserializer());
