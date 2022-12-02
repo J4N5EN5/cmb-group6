@@ -14,7 +14,7 @@ public class UniHub {
     private String name;
     private Geometry polygon;
     //List of neighbors of this hub
-    private List<UniHub> neighbors = new ArrayList<>();
+    //private List<UniHub> neighbors = new ArrayList<>();
 
     public UniHub(Geometry polygon, String name) {
         this.polygon = polygon;
