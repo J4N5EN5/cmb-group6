@@ -17,7 +17,7 @@ public class UniGraph {
         dijkstraShortestPath = new DijkstraShortestPath<>(graph);
     }
 
-    private List<UniHub> getPath(UniHub source, UniHub sink) {
+    public List<UniHub> getPath(UniHub source, UniHub sink) {
         return dijkstraShortestPath.getPath(source, sink).getVertexList();
     }
 
