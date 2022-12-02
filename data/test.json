@@ -1,0 +1,18 @@
+{
+  "vertices": [
+    {
+      "name": "magistrale",
+      "polygon": "POLYGON((100 100, 100 200, 200 200, 200 100, 100 100))"
+    },
+    {
+      "name": "hs1",
+      "polygon": "POLYGON((250 210, 350 210, 375 260, 350 310, 250 310, 250 210))"
+    }
+  ],
+  "edges": [
+    {
+      "first": "magistrale",
+      "second": "hs1"
+    }
+  ]
+}
