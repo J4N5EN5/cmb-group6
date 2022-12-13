@@ -30,6 +30,7 @@ public class DTNHost implements Comparable<DTNHost> {
 	private Path path;
 	private double speed;
 	private double nextTimeToMove;
+	public final String groupId;
 	private String name;
 	private List<MessageListener> msgListeners;
 	private List<MovementListener> movListeners;
@@ -61,6 +62,7 @@ public class DTNHost implements Comparable<DTNHost> {
 		this.comBus = comBus;
 		this.location = new Coord(0,0);
 		this.address = getNextAddress();
+		this.groupId = groupId;
 		this.name = groupId+address;
 		this.net = new ArrayList<NetworkInterface>();
 		//this.agenda = agenda;
