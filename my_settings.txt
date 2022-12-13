@@ -9,19 +9,17 @@ Events.nrof = 0
 
 Scenario.nrofHostGroups = 1
 Group1.groupID = x
-Group1.nrofHosts = 20
+Group1.nrofHosts = 5
 Group1.nrofInterfaces = 1
 Group1.interface1 = myInterface
 myInterface.type = SimpleBroadcastInterface
 myInterface.transmitRange = 20
 myInterface.transmitSpeed = 1
 
-Group1.movementModel = TestMovement
+Group1.movementModel = UniMovement
 Group1.speed = 1, 1
 Group1.router = EpidemicRouter
 
-Group1.wktPath = data/test.json
-
-GUI.UnderlayImage.fileName = data/background.png
+GUI.UnderlayImage.fileName = data/background.jpg
 GUI.UnderlayImage.offset = 0, 0
 GUI.UnderlayImage.scale = 1
