@@ -137,7 +137,7 @@ public class TestMovement extends MovementModel{
 
     public TestMovement(TestMovement other){
         super(other);
-        this.genesis = other.genesis;
+        //this.genesis = other.genesis;
         this.current = other.current;
         this.clock = other.clock;
         this.switcher = other.switcher;

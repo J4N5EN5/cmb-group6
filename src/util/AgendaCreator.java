@@ -1,10 +1,13 @@
 package util;
 
-import sun.security.util.ArrayUtil;
+//import sun.security.util.ArrayUtil;
 
-import java.util.*;
+//import java.util.*;
 
 class AgendaCreator {
+
+}
+    /*
 
     //TODO 1: check for right use of indices -> e.g. if day starts at 8, should the first index be 0 or (8-startOfDay)...
     //TODO 2: rename global variables to be more descriptive
@@ -41,7 +44,7 @@ class AgendaCreator {
     }
 
 
-    /*
+
         This method creates an array by shape (number_hosts x number_timeslots + 2).
         It creates an individual agenda for each host of the mobility model based on parameters in the config file. This method is the first of two methods
         to create the agendas. It assigns location types for each timeslot with a given location-type -> ID mapping. In the second method, these location types are
@@ -53,7 +56,7 @@ class AgendaCreator {
         :param share_lectures: The share in percent (0.x) that lectures make up of each individual agenda
         :param share_tutorials: The share in percent (0.x) that tutorials make up of each individual agenda
         :param share_leisure: The share in percent (0.x) that leisure time make up of each individual agenda
-    */
+
 
     public int[][] createAgendas () {
         return new int[][] {{1,2,3}};
@@ -79,7 +82,6 @@ class AgendaCreator {
         // n -> 20% free time, 40% lecture, 40% tutorial... (n_free_time, n_lecture, n_tutorial) -> matrix with dim(hosts, len(agenda)) whith the location types in it...
         // iterate over it and fill in the different actual locatoins...
 
-        // Todo write agenda helper 3!!! (pls not fire me)
 
         int[][] agendaHelper = new int[n_hosts][n_timeslots+2];
         for(int i = 0; i < n_hosts; i++) {
@@ -144,7 +146,7 @@ class AgendaCreator {
                 available_activity.remove(index);
             }
 
-            /*int[] temp_lecture = new int[n_lectures];
+            int[] temp_lecture = new int[n_lectures];
             Arrays.fill(temp_lecture, 2);
             int[] temp_tutorial = new int[n_tutorial];
             Arrays.fill(temp_tutorial, 6);
@@ -162,7 +164,7 @@ class AgendaCreator {
             => [1,1,2,2,Mensa,2,2,3,3] -> permutate...
             mensa index
             [0,0,0,0,0,1,2,3,3,2,3,1,0,0,0]
-             */
+
 
 
 
@@ -291,12 +293,122 @@ class AgendaCreator {
         return new int[] {1,2,3};
 
     }
+    class LocationInfo {
+        int type, ID, limit;
+        //Constructor
+        LocationInfo(int type, int ID, int limit) {
+            this.type = type;
+            this.ID = ID;
+            this.limit = limit;
+        }
+    }
+    public int[][] CreateLocationWithType(int n_hosts, int n_timeslots, int[][] agendaTypeAllPeople, List<List<Integer>> locationInfo) {
+        // I assume that the location type have been allocated with (type, ID, limit)
+        // Location Types (Entry/Exit = 0; Mensa = 1; Lecture = 2; Self-Study = 3; Leisure = 4; Office = 5; Tutorial = 6
+        // Location Type not here -1
+        // limit = -1 meaning there's not a limit to this place
+        //   note: there's no limit of leisure
+        //   note: we would assume there's at least one exit/entry with no limit
+        //   note: we will not have a limit of mensa
+        //1. each location type assign with each List
+        //1.1 also find the altogether limit of person in this TYPE of location
+        //2. iterate through each person
+        //2.1 assign them with a random type of spot
+        //2.2 if no spot at all, change type and then assign
+
+        List<List<Integer>> exitentryList   = new ArrayList<>();
+        List<List<Integer>> mensaList       = new ArrayList<>();
+        List<List<Integer>> lectureList     = new ArrayList<>();
+        List<List<Integer>> selfstudyList   = new ArrayList<>();
+        List<List<Integer>> leisureList     = new ArrayList<>();
+        List<List<Integer>> officeList      = new ArrayList<>();
+        List<List<Integer>> tutorialList    = new ArrayList<>();
+
+        int[] limitOfType = new int[7]; // altogether 7 types of location
+        Arrays.fill(limitOfType, 0);
+
+        for (List<Integer> itemInfo: locationInfo) {
+            int typeElem = itemInfo.get(0);
+            switch (typeElem){
+                case 0: exitentryList.add(itemInfo);
+                        break;
+                case 1: mensaList.add(itemInfo);
+                        break;
+                case 2: lectureList.add(itemInfo);
+                        break;
+                case 3: selfstudyList.add(itemInfo);
+                        break;
+                case 4: leisureList.add(itemInfo);
+                        break;
+                case 5: officeList.add(itemInfo);
+                        break;
+                case 6: tutorialList.add(itemInfo);
+                        break;
+            }
+            //calculate the overall limit in this type of location
+            if (limitOfType[typeElem]!=-1) {
+                if (itemInfo.get(2)==-1){
+                    limitOfType[typeElem] = -1;
+                }else{
+                    limitOfType[typeElem] += itemInfo.get(2);
+                }
+            }
+        }
+
+        List<List<List<Integer>>> typeList   = new ArrayList<>();
+        for (List<Integer> itemInfo: locationInfo) {
+            int typeElem = itemInfo.get(0);
+            typeList.get(typeElem).add(itemInfo);
+        }
+
+        List<List<List<List<Integer>>>> timeslotTypeList   = new ArrayList<>();
+        for (int i = 0; i < n_timeslots+2; i++) {
+            timeslotTypeList.add(typeList);
+        }
+
+        //
+
+        int[][] agendaWithLocation = new int[n_hosts][n_timeslots + 2];
+
+        // for each person
+        // first initialize location with -1, meaning not here
+        // iterate through the location type that it has been assigned
+        //      if type is not here(-1), then go to next timeslot
+        // check the corresponding location list with the same type
+        //      if location list of this type is none (len=0), assign it with leisure
+        // find the number of locations with the same type
+        // choose a random one
+        // calculate the new limit of this place
+        //  if the new limit is 0, them delete this place in this timeslot
 
 
 
+        for(int i = 0; i < n_hosts; i++) {
+            Arrays.fill(agendaWithLocation[i], -1);
+            for (int time = 0; j < n_timeslots + 2; j++) {
+                int typeNow = agendaTypeAllPeople[i][time];
+                if (typeNow == -1){
+                    continue;
+                }
+                int num_choice =  timeslotTypeList.get(time).get(typeNow).size();
+                if (num_choice == 0){
+                    typeNow = 2;//leisure
+                    num_choice =  timeslotTypeList.get(time).get(typeNow).size();
+                }
+                // (int) (Math.random() * (max - min + 1)) + min;
+                // now min=0, max = num_choice-1
+                int choice_index = (int) (Math.random() * num_choice);
+                agendaWithLocation[i][time] = timeslotTypeList.get(time).get(typeNow).get(choice_index).get(1);
+                Integer limitBefore = timeslotTypeList.get(time).get(typeNow).get(choice_index).get(2);
+                if (limitBefore == 1){
+                    timeslotTypeList.get(time).get(typeNow).remove(choice_index);
+                } else if (limitBefore > 1) {
+                    timeslotTypeList.get(time).get(typeNow).get(choice_index).set(2, limitBefore-1);
+                }
+            }
+        }
+        return agendaWithLocation;
+    }
+}*/
 
 
-
-
-
-}
