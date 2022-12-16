@@ -22,7 +22,7 @@ Group1.router = EpidemicRouter
 
 Group1.wktPath = fmi2.json
 
-GUI.UnderlayImage.fileName = data/background.png
+GUI.UnderlayImage.fileName = data/test.png
 GUI.UnderlayImage.offset = 0, 0
 GUI.UnderlayImage.scale = 1
 
