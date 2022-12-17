@@ -20,7 +20,7 @@ Group1.movementModel = TestMovement
 Group1.speed = 1, 1
 Group1.router = EpidemicRouter
 
-Group1.wktPath = fmi2.json
+Group1.wktPath = data/test.json
 
 GUI.UnderlayImage.fileName = data/FMI_building_v3.png
 GUI.UnderlayImage.offset = 0, 0
