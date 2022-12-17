@@ -6,15 +6,15 @@ import java.util.*;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
-class Agenda {
+public class Agenda {
 
     static int nHosts, dayStart, dayEnd, meanArrivalTime, meanStayDuration, agendaAssignmentCounter;
     static double stdArrivalTime, stdStayDuration, mensaProbability, shareLeisure, shareLecture, shareTutorial;
     static Random rand = new Random();
     static final List<Location> locations;
-    static int[][] agendaTable;
+    static String[][] agendaTable;
 
-    private final int[] agenda;
+    private final String[] agenda;
     private final int agendaIndex;
 
     public Agenda() {
@@ -32,7 +32,7 @@ class Agenda {
     // TODO: add documentation
     private static class Location {
         private LocationTypes locationType;
-        private int id, limit;
+        private int limit;
         private String name, polygon;
         private List<Integer> limits = new ArrayList<>();
 
@@ -40,9 +40,9 @@ class Agenda {
 
         public Boolean isFull(int index) {return limits.get(index) == 0;}
 
-        public int assignPlace(int timeslot){
+        public String assignPlace(int timeslot){
             this.limits.set(timeslot, this.limits.get(timeslot)-1);
-            return this.id;
+            return this.name;
         }
 
         @Override
@@ -88,10 +88,12 @@ class Agenda {
             Collections.shuffle(entranceList);
         }
 
-        public int getLocation(LocationTypes locationType, int index) {
+        public String getLocation(LocationTypes locationType, int index) {
 
             List<Location> chosenList;
             switch(locationType) {
+                case ENTRANCE:
+                    return "entrance";
                 case MENSA:
                     chosenList = mensaList;
                     break;
@@ -112,21 +114,21 @@ class Agenda {
                 if (!location.isFull(index)) {return location.assignPlace(index);}
                 else {return getLocation(LocationTypes.LEISURE, index);}
             }
-            return -2;
+            return "None";
         }
 
-        public int getEntrance() {
+        public String getEntrance() {
             for (Location location : entranceList){
                 if (location.limit != 0) {
                     location.limit -= 1;
-                    return location.id;
+                    return location.name;
                 } else {
-                    int ret_val = entranceList.get(default_counter).id;
+                    String ret_val = entranceList.get(default_counter).name;
                     default_counter = (default_counter + 1) % entranceList.size();
                     return ret_val;
                 }
             }
-            return -2;
+            return "None";
         }
     }
 
@@ -135,13 +137,17 @@ class Agenda {
         List<Location> jsonLocations = null;
         Properties prop = new Properties();
         try {
-            String propFile = "UniHub.properties";
+            String propFile = "test_settings.txt";
             String locationFile = "test.json";
             prop.load(Files.newInputStream(Paths.get(propFile)));
+
+            //sonObject jsonObject = gson.fromJson(content, JsonObject.class);
+           // vertices = deserializeVertices(jsonObject.get("vertices"));
+
+
             Gson gson = new Gson();
             Reader reader = Files.newBufferedReader(Paths.get(locationFile));
             jsonLocations = new Gson().fromJson(reader, new TypeToken<List<Location>>() {}.getType());
-            jsonLocations.forEach(System.out::println);
             reader.close();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -169,7 +175,7 @@ class Agenda {
         assignLocations(tmp);
     }
 
-    public int[] getAgenda() {return this.agenda;}
+    public String[] getAgenda() {return this.agenda;}
     public int getAgendaIndex() {return this.agendaIndex;}
 
     private static List<List<LocationTypes>> assignLocationTypes() {
@@ -209,13 +215,13 @@ class Agenda {
 
     private static void assignLocations(List<List<LocationTypes>> agendaTable){
         int nTimeslots = dayEnd-dayStart;
-        int[][] agenda = new int[nHosts][nTimeslots];
+        String[][] agenda = new String[nHosts][nTimeslots];
         LocationDrawer locationDrawer = new LocationDrawer();
         for(int i = 0; i < nHosts; i++){
-            int entrance_id = locationDrawer.getEntrance();
+            String entranceName = locationDrawer.getEntrance();
             for(int j = 0; j < nTimeslots; j++){
-                if (agenda[i][j] == -1) {
-                    agenda[i][j] = entrance_id;
+                if (agendaTable.get(i).get(j) == LocationTypes.ENTRANCE) {
+                    agenda[i][j] = entranceName;
                 } else {
                     agenda[i][j] = locationDrawer.getLocation(agendaTable.get(i).get(j), j);
                 }
@@ -224,49 +230,8 @@ class Agenda {
         Agenda.agendaTable = agenda;
     }
 
-    /*
-    private static int[][] createLocationWithType() {
-        int nTimeslots = dayEnd-dayStart;
+    public static void main(String[] args){
+        System.out.println(Arrays.deepToString(agendaTable));
 
-        List<List<List<Integer>>> typeList = new ArrayList<>();
-
-
-        List<List<List<List<Integer>>>> timeslotTypeList = new ArrayList<>();
-        for (int i = 0; i < nTimeslots; i++) {
-            timeslotTypeList.add(typeList);
-        }
-
-
-        int[][] agendaWithLocation = new int[nHosts][dayEnd-dayStart];
-
-        for(int i = 0; i < nHosts; i++) {
-            Arrays.fill(agendaWithLocation[i], -1);
-            for (int time = 0; time < dayEnd-dayStart; time++) {
-                int typeNow = agendaTypeAllPeople[i][time];
-                if (typeNow == -1){
-                    continue;
-                }
-                int num_choice =  timeslotTypeList.get(time).get(typeNow).size();
-                if (num_choice == 0){
-                    typeNow = 2;//leisure
-                    num_choice =  timeslotTypeList.get(time).get(typeNow).size();
-                }
-                // (int) (Math.random() * (max - min + 1)) + min;
-                // now min=0, max = num_choice-1
-                int choice_index = (int) (Math.random() * num_choice);
-                agendaWithLocation[i][time] = timeslotTypeList.get(time).get(typeNow).get(choice_index).get(1);
-                Integer limitBefore = timeslotTypeList.get(time).get(typeNow).get(choice_index).get(2);
-                if (limitBefore == 1){
-                    timeslotTypeList.get(time).get(typeNow).remove(choice_index);
-                } else if (limitBefore > 1) {
-                    timeslotTypeList.get(time).get(typeNow).get(choice_index).set(2, limitBefore-1);
-                }
-            }
-        }
-        return agendaWithLocation;
-    }
-    */
-
-    public static void main(String[] args) {
     }
 }

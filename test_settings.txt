@@ -25,3 +25,16 @@ Group1.wktPath = fmi2.json
 GUI.UnderlayImage.fileName = data/background.png
 GUI.UnderlayImage.offset = 0, 0
 GUI.UnderlayImage.scale = 1
+
+// Settings for Agenda creation
+nHosts = 10
+dayStart = 5
+dayEnd = 22
+meanArrivalTime = 5
+meanStayDuration = 17
+stdArrivalTime = 0
+stdStayDuration = 0
+mensaProbability = 0.5
+shareLeisure = 0.2
+shareLecture = 0.2
+shareTutorial = 0.2

@@ -1,14 +1,20 @@
 {
   "vertices": [
     {
+      "locationType" : "STUDY",
+      "limit" : 100,
       "name" : "magistrale",
       "polygon" : "POLYGON((100 100, 100 200, 200 200, 200 100, 100 100))"
     },
     {
+      "locationType" : "LECTURE",
+      "limit" : 100,
       "name" : "hs1",
       "polygon" : "POLYGON((250 210, 350 210, 375 260, 350 310, 250 310, 250 210))"
     },
     {
+      "locationType" : "LEISURE",
+      "limit" : 100,
       "name" : "R_1",
       "polygon" : "POLYGON((250 100, 250 200, 350 200, 350 100, 250 100))"
     }

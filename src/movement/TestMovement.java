@@ -4,13 +4,11 @@ import com.google.gson.GsonBuilder;
 import core.Coord;
 import core.Settings;
 import core.SimClock;
+import util.Agenda;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import movement.map.UniGraph;
 import org.jgrapht.alg.util.Pair;
@@ -27,12 +25,18 @@ public class TestMovement extends MovementModel{
     private UniHub current, goal;
     private List<UniHub> route = null;
     private int route_index = 0;
+    private int current_index = 0;
     private Coord lastWaypoint;
     private SimClock clock;
     private boolean switcher;
+    private String[] agenda;
+    private static Map<String, UniHub> locationMap;
 
     private static int id_global=0;
     private int id=0;
+    // TODO: get time slot size from settings
+    // TODO: get time slot time by
+    private int timeSlot = 1000;
 
     private static boolean parsed = false;
     private static UniGraph fmi;
@@ -42,12 +46,13 @@ public class TestMovement extends MovementModel{
 
     @Override
     public Path getPath() {
-        if(clock.getTime() > 3000 && switcher){
-            if(rng.nextDouble() > 0.5){
-                goal = vertices.get(1);
-                route = graph.getPath(current, goal);
-            }
-            switcher = false;
+        if((int) clock.getTime() / timeSlot > current_index){
+            current = locationMap.get(agenda[current_index]);
+            current_index ++;
+            goal = locationMap.get(agenda[current_index]);
+            route = graph.getPath(current, goal);
+
+
         }
 
         if(route != null){
@@ -119,6 +124,9 @@ public class TestMovement extends MovementModel{
             Gson gson = new Gson();
             JsonObject jsonObject = gson.fromJson(content, JsonObject.class);
             vertices = deserializeVertices(jsonObject.get("vertices"));
+            for(UniHub hub : vertices) {
+                locationMap.put(hub.getName(), hub);
+            }
             //System.out.println(jsonObject.get("vertices"));
 
             // DONE: deserialize edges
@@ -137,6 +145,7 @@ public class TestMovement extends MovementModel{
 
     public TestMovement(TestMovement other){
         super(other);
+        this.agenda = new Agenda().getAgenda();
         this.genesis = other.genesis;
         this.current = other.current;
         this.clock = other.clock;
