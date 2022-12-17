@@ -136,7 +136,7 @@ public class TestMovement extends MovementModel{
             parsed = true;
             System.out.println("parsed!");
         }
-        genesis = vertices.get(0);
+        genesis = locationMap.get(agenda[0]);
         current = genesis;
         clock = SimClock.getInstance();
         switcher = true;
