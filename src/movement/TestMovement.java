@@ -30,7 +30,7 @@ public class TestMovement extends MovementModel{
     private SimClock clock;
     private boolean switcher;
     private String[] agenda;
-    private static Map<String, UniHub> locationMap;
+    private static HashMap<String, UniHub> locationMap = new HashMap<String, UniHub>();
 
     private static int id_global=0;
     private int id=0;
