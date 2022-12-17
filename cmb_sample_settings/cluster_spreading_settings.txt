@@ -61,7 +61,7 @@ Group5.interface1 = firstinterface
 ## Map based movement -movement model specific settings
 MapBasedMovement.nrofMapFiles = 2
 MapBasedMovement.mapFile1 = data/cluster/ferryroute.wkt
-MapBasedMovement.mapFile2 = data/cluster/origin.wkt
+#MapBasedMovement.mapFile2 = data/cluster/origin.wkt
 
 
 ## Message creation parameters

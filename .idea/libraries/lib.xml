@@ -4,7 +4,6 @@
       <root url="jar://$PROJECT_DIR$/lib/ECLA.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/DTNConsoleConnection.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/gson-2.10.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/jgrapht-core-1.5.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jheaps-0.13.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jts-core-1.19.0.jar!/" />
     </CLASSES>
