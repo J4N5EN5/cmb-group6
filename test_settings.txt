@@ -27,7 +27,7 @@ GUI.UnderlayImage.offset = 0, 0
 GUI.UnderlayImage.scale = 1
 
 // Settings for Agenda creation
-nHosts = 10
+nHosts = 500
 dayStart = 5
 dayEnd = 22
 meanArrivalTime = 5

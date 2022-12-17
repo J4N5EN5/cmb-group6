@@ -6,6 +6,7 @@ import java.util.*;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
+
 public class Agenda {
 
     static int nHosts, dayStart, dayEnd, meanArrivalTime, meanStayDuration, agendaAssignmentCounter;
@@ -23,13 +24,8 @@ public class Agenda {
         agendaAssignmentCounter++;
     }
 
-    private enum LocationTypes {ENTRANCE, MENSA, TUTORIAL, LECTURE, STUDY, LEISURE;}
+    private enum LocationTypes {ENTRANCE, MENSA, TUTORIAL, LECTURE, STUDY, LEISURE, ROUTING, DEFAULT}
 
-    // TODO: debug strange behavior of mensa at 11:00
-    // TODO: create entrance polygons
-    // TODO: include into movement model
-    // TODO: lookup how to adjust infection model so that no infections happen at the entrance
-    // TODO: add documentation
     private static class Location {
         private LocationTypes locationType;
         private int limit;
@@ -56,29 +52,19 @@ public class Agenda {
         private final List<Location> studyList = new ArrayList<>();
         private final List<Location> leisureList = new ArrayList<>();
         private final List<Location> entranceList = new ArrayList<>();
+        private final List<Location> defaultList = new ArrayList<>();
         private int default_counter = 0;
 
         public LocationDrawer() {
             for(Location location : locations) {
-                switch(location.locationType) {
-                    case ENTRANCE:
-                        entranceList.add(location);
-                        break;
-                    case MENSA:
-                        mensaList.add(location);
-                        break;
-                    case TUTORIAL:
-                        tutorialList.add(location);
-                        break;
-                    case LECTURE:
-                        lectureList.add(location);
-                        break;
-                    case STUDY:
-                        studyList.add(location);
-                        break;
-                    case LEISURE:
-                        leisureList.add(location);
-                        break;
+                switch (location.locationType) {
+                    case ENTRANCE -> entranceList.add(location);
+                    case MENSA -> mensaList.add(location);
+                    case TUTORIAL -> tutorialList.add(location);
+                    case LECTURE -> lectureList.add(location);
+                    case STUDY -> studyList.add(location);
+                    case LEISURE -> leisureList.add(location);
+                    case DEFAULT -> defaultList.add(location);
                 }
             }
             Collections.shuffle(mensaList);
@@ -91,30 +77,21 @@ public class Agenda {
         public String getLocation(LocationTypes locationType, int index) {
 
             List<Location> chosenList;
-            switch(locationType) {
-                case ENTRANCE:
+            switch (locationType) {
+                case ENTRANCE -> {
                     return "entrance";
-                case MENSA:
-                    chosenList = mensaList;
-                    break;
-                case TUTORIAL:
-                    chosenList = tutorialList;
-                    break;
-                case LECTURE:
-                    chosenList = lectureList;
-                    break;
-                case STUDY:
-                    chosenList = studyList;
-                    break;
-                default:
-                    chosenList = leisureList;
-                    break;
+                }
+                case MENSA -> chosenList = mensaList;
+                case TUTORIAL -> chosenList = tutorialList;
+                case LECTURE -> chosenList = lectureList;
+                case STUDY -> chosenList = studyList;
+                case DEFAULT -> chosenList = defaultList;
+                default -> chosenList = leisureList;
             }
             for (Location location : chosenList) {
                 if (!location.isFull(index)) {return location.assignPlace(index);}
-                else {return getLocation(LocationTypes.LEISURE, index);}
             }
-            return "None";
+            return getLocation(LocationTypes.DEFAULT, index);
         }
 
         public String getEntrance() {
@@ -138,16 +115,16 @@ public class Agenda {
         Properties prop = new Properties();
         try {
             String propFile = "test_settings.txt";
-            String locationFile = "test.json";
+            String locationFile = "data/test.json";
             prop.load(Files.newInputStream(Paths.get(propFile)));
-
-            //sonObject jsonObject = gson.fromJson(content, JsonObject.class);
-           // vertices = deserializeVertices(jsonObject.get("vertices"));
+            Reader reader = Files.newBufferedReader(Paths.get(locationFile));
 
 
             Gson gson = new Gson();
-            Reader reader = Files.newBufferedReader(Paths.get(locationFile));
-            jsonLocations = new Gson().fromJson(reader, new TypeToken<List<Location>>() {}.getType());
+            JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
+
+            jsonLocations = new Gson().fromJson(jsonObject.get("vertices"), new TypeToken<List<Location>>() {
+            }.getType());
             reader.close();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -176,7 +153,6 @@ public class Agenda {
     }
 
     public String[] getAgenda() {return this.agenda;}
-    public int getAgendaIndex() {return this.agendaIndex;}
 
     private static List<List<LocationTypes>> assignLocationTypes() {
         List<List<LocationTypes>> agendaTable = new ArrayList<>();
@@ -232,6 +208,5 @@ public class Agenda {
 
     public static void main(String[] args){
         System.out.println(Arrays.deepToString(agendaTable));
-
     }
 }

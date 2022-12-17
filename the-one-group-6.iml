@@ -10,7 +10,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="google.code.gson" level="project" />
     <orderEntry type="library" name="jgrapht.core" level="project" />
-    <orderEntry type="library" name="locationtech.jts.io.common" level="project" />
     <orderEntry type="library" name="DTNConsoleConnection" level="project" />
+    <orderEntry type="library" name="locationtech.jts.io.common" level="project" />
   </component>
 </module>
