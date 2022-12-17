@@ -15,22 +15,38 @@ Report.nrofReports = 0
 Events.nrof = 0
 
 myInterface.type = SimpleBroadcastInterface
-myInterface.transmitRange = 20
-myInterface.transmitSpeed = 1
+myInterface.transmitSpeed = 50k
+myInterface.transmitRange = 10
+
 
 Scenario.nrofHostGroups = 1
 
 # common settings for all groups
 Group.movementModel = TestMovement
-Group.router = EpidemicRouter
+Group.router = MyEpidemicRouter
 Group.nrofInterfaces = 1
 Group.interface1 = myInterface
 Group.speed = 1, 1
 Group.wktPath = data/test.json
-Group.nrofHosts = 20
+Group.nrofHosts = 7
 
 # Set group
 Group1.groupID = x
+
+## Message creation parameters
+# How many event generators
+Events.nrof = 1
+# Class of the first event generator
+Events1.class = SingleMessageGenerator
+# (following settings are specific for the MessageEventGenerator class)
+# Creation interval in seconds (one new message every 25 to 35 seconds)
+Events1.interval = 100k,100k
+# Message sizes (50kB - 150kB)
+Events1.size = 50k,150k
+# range of message source/destination addresses
+Events1.hosts = 1,7
+# Message ID prefix
+Events1.prefix = M
 
 
 ## GUI settings
