@@ -1,27 +1,43 @@
-Scenario.name = MyScenario
-Scenario.endTime = 6000
+#
+# Settings for our uni scenario
+#
+
+## Scenario settings
+Scenario.name = UniScenario
+Scenario.simulateConnections = true
 Scenario.updateInterval = 0.1
-Scenario.simulateConnections = false
+Scenario.endTime = 6000
+
 Scenario.nrofHostGroups = 0
+
 MovementModel.worldSize = 882, 618
 Report.nrofReports = 0
 Events.nrof = 0
 
-Scenario.nrofHostGroups = 1
-Group1.groupID = x
-Group1.nrofHosts = 20
-Group1.nrofInterfaces = 1
-Group1.interface1 = myInterface
 myInterface.type = SimpleBroadcastInterface
 myInterface.transmitRange = 20
 myInterface.transmitSpeed = 1
 
-Group1.movementModel = TestMovement
-Group1.speed = 1, 1
-Group1.router = EpidemicRouter
+Scenario.nrofHostGroups = 1
 
-Group1.wktPath = data/test.json
+# common settings for all groups
+Group.movementModel = TestMovement
+Group.router = EpidemicRouter
+Group.nrofInterfaces = 1
+Group.interface1 = myInterface
+Group.speed = 1, 1
+Group.wktPath = data/test.json
+Group.nrofHosts = 20
 
+# Set group
+Group1.groupID = x
+
+
+## GUI settings
+
+# GUI underlay image settings
 GUI.UnderlayImage.fileName = data/FMI_building_v3.png
+# Image offset in pixels (x, y)
 GUI.UnderlayImage.offset = 0, 0
+# Scaling factor for the image
 GUI.UnderlayImage.scale = 1
