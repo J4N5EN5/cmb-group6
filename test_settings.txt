@@ -3,7 +3,7 @@ Scenario.endTime = 6000
 Scenario.updateInterval = 0.1
 Scenario.simulateConnections = false
 Scenario.nrofHostGroups = 0
-MovementModel.worldSize = 500, 500
+MovementModel.worldSize = 882, 618
 Report.nrofReports = 0
 Events.nrof = 0
 
@@ -22,7 +22,7 @@ Group1.router = EpidemicRouter
 
 Group1.wktPath = fmi2.json
 
-GUI.UnderlayImage.fileName = data/test.png
+GUI.UnderlayImage.fileName = data/FMI_building_v3.png
 GUI.UnderlayImage.offset = 0, 0
 GUI.UnderlayImage.scale = 1
 
