@@ -52,12 +52,13 @@ public class TestMovement extends MovementModel{
             current_index ++;
             goal = locationMap.get(agenda[current_index]);
             route = graph.getPath(current, goal);
-
-
         }
 
-        /*
+
         if(route != null){
+            if (route_index >= route.size()) {
+                route_index = route.indexOf(current);
+            }
             current = route.get(route_index);
             route_index++;
             if(current == goal) {
@@ -65,7 +66,7 @@ public class TestMovement extends MovementModel{
                 route_index = 0;
             }
         }
-        */
+
         Point pt;
         Coordinate c;
 
