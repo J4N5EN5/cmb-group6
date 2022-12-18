@@ -13,6 +13,10 @@ if.type = SimpleBroadcastInterface
 if.transmitRange = 30
 if.transmitSpeed = 1000k
 
+Group.movementModel = TestMovement
+Group.speed = 1, 1
+Group.wktPath = data/test.json
+
 Group1.groupID = 1
 Group1.nrofHosts = 10
 Group1.nrofInterfaces = 1
@@ -26,25 +30,10 @@ Group2.nrofInterfaces = 1
 Group2.interface1 = if
 Group2.router = SpyCounterRouter
 
-
-
 Group3.groupID = 3
 Group3.nrofHosts = 800
 Group3.nrofInterfaces = 0
 Group3.router = PassiveRouter
-
-
-Group1.movementModel = TestMovement
-Group1.speed = 1, 1
-Group1.wktPath = data/test.json
-
-Group2.movementModel = TestMovement
-Group2.speed = 1, 1
-Group2.wktPath = data/test.json
-
-Group3.movementModel = TestMovement
-Group3.speed = 1, 1
-Group3.wktPath = data/test.json
 
 GUI.UnderlayImage.fileName = data/FMI_building_v3.png
 GUI.UnderlayImage.offset = 0, 0
