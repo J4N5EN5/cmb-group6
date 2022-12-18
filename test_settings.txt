@@ -1,33 +1,57 @@
 Scenario.name = MyScenario
 Scenario.endTime = 17000
 Scenario.updateInterval = 0.1
-Scenario.simulateConnections = false
-Scenario.nrofHostGroups = 0
+Scenario.simulateConnections = true
 MovementModel.worldSize = 882, 618
 Report.nrofReports = 0
 Events.nrof = 0
 
-Scenario.nrofHostGroups = 1
-Group1.groupID = x
-Group1.nrofHosts = 500
+Scenario.nrofHostGroups = 3
+
+Group.interface = if
+if.type = SimpleBroadcastInterface
+if.transmitRange = 30
+if.transmitSpeed = 1000k
+
+Group1.groupID = 1
+Group1.nrofHosts = 10
 Group1.nrofInterfaces = 1
-Group1.interface1 = myInterface
-myInterface.type = SimpleBroadcastInterface
-myInterface.transmitRange = 20
-myInterface.transmitSpeed = 1
+Group1.interface1 = if
+Group1.router = SpyRouter
+Group1.nmcount = 3,100
+
+Group2.groupID = 2
+Group2.nrofHosts = 5
+Group2.nrofInterfaces = 1
+Group2.interface1 = if
+Group2.router = SpyCounterRouter
+
+
+
+Group3.groupID = 3
+Group3.nrofHosts = 800
+Group3.nrofInterfaces = 0
+Group3.router = PassiveRouter
+
 
 Group1.movementModel = TestMovement
 Group1.speed = 1, 1
-Group1.router = EpidemicRouter
-
 Group1.wktPath = data/test.json
+
+Group2.movementModel = TestMovement
+Group2.speed = 1, 1
+Group2.wktPath = data/test.json
+
+Group3.movementModel = TestMovement
+Group3.speed = 1, 1
+Group3.wktPath = data/test.json
 
 GUI.UnderlayImage.fileName = data/FMI_building_v3.png
 GUI.UnderlayImage.offset = 0, 0
 GUI.UnderlayImage.scale = 1
 
 // Settings for Agenda creation
-nHosts = 500
+nHosts = 1000
 dayStart = 5
 dayEnd = 22
 meanArrivalTime = 5
@@ -35,6 +59,6 @@ meanStayDuration = 17
 stdArrivalTime = 0
 stdStayDuration = 0
 mensaProbability = 0.5
-shareLeisure = 0.2
-shareLecture = 0.2
-shareTutorial = 0.2
+shareLeisure = 0.1
+shareLecture = 0.35
+shareTutorial = 0.35

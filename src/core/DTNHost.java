@@ -58,14 +58,12 @@ public class DTNHost implements Comparable<DTNHost> {
 			String groupId, List<NetworkInterface> interf,
 			ModuleCommunicationBus comBus,
 			MovementModel mmProto, MessageRouter mRouterProto){
-				   //int[] agenda) {
 		this.comBus = comBus;
 		this.location = new Coord(0,0);
 		this.address = getNextAddress();
 		this.groupId = groupId;
 		this.name = groupId+address;
 		this.net = new ArrayList<NetworkInterface>();
-		//this.agenda = agenda;
 		this.current_agenda_index = -1;
 
 		for (NetworkInterface i : interf) {

@@ -3,13 +3,13 @@
     {
       "name" : "library",
       "locationType" : "STUDY",
-      "limit" : 200,
+      "limit" : 150,
       "polygon" : "POLYGON((29 359, 124 374, 111 455, 16 440, 29 359))"
     },
     {
       "name" : "rechnerhalle",
       "locationType" : "STUDY",
-      "limit" : 200,
+      "limit" : 150,
       "polygon" : "POLYGON((309 338, 378 350, 373 380, 304 368, 309 338))"
     },
     {
@@ -33,7 +33,7 @@
     {
       "name" : "interims",
       "locationType" : "LECTURE",
-      "limit" : 250,
+      "limit" : 150,
       "polygon" : "POLYGON((470 117, 546 130, 534 200, 458 187, 470 117))"
     },
     {
@@ -57,61 +57,61 @@
     {
       "name" : "O_4",
       "locationType" : "TUTORIAL",
-      "limit" : 25,
+      "limit" : 30,
       "polygon" : "POLYGON((459 522, 490 527, 469 609, 439 601, 459 522))"
     },
     {
       "name" : "O_5",
       "locationType" : "TUTORIAL",
-      "limit" : 25,
+      "limit" : 30,
       "polygon" : "POLYGON((390 250, 422 257, 408 338, 377 331, 390 250))"
     },
     {
       "name" : "O_6",
       "locationType" : "TUTORIAL",
-      "limit" : 25,
+      "limit" : 30,
       "polygon" : "POLYGON((380 509, 410 518, 390 590, 360 580, 380 509))"
     },
     {
       "name" : "O_7",
       "locationType" : "TUTORIAL",
-      "limit" : 25,
+      "limit" : 30,
       "polygon" : "POLYGON((304 235, 337 241, 323 312, 290 307, 304 235))"
     },
     {
       "name" : "O_8",
       "locationType" : "TUTORIAL",
-      "limit" : 25,
+      "limit" : 30,
       "polygon" : "POLYGON((299 494, 333 495, 313 567, 282 558, 299 494))"
     },
     {
       "name" : "O_9",
       "locationType" : "TUTORIAL",
-      "limit" : 25,
+      "limit" : 30,
       "polygon" : "POLYGON((219 222, 251 227, 237 307, 206 302, 219 222))"
     },
     {
       "name" : "O_10",
       "locationType" : "TUTORIAL",
-      "limit" : 25,
+      "limit" : 30,
       "polygon" : "POLYGON((224 470, 255 478, 236 546, 205 538, 224 470))"
     },
     {
       "name" : "O_11",
       "locationType" : "TUTORIAL",
-      "limit" : 25,
+      "limit" : 30,
       "polygon" : "POLYGON((134 205, 166 211, 152 291, 121 285, 134 205))"
     },
     {
       "name" : "O_12",
       "locationType" : "TUTORIAL",
-      "limit" : 25,
+      "limit" : 30,
       "polygon" : "POLYGON((146 449, 176 458, 159 525, 128 516, 146 449))"
     },
     {
       "name" : "O_13",
       "locationType" : "TUTORIAL",
-      "limit" : 25,
+      "limit" : 30,
       "polygon" : "POLYGON((48 191, 80 196, 67 273, 36 266, 48 191))"
     },
     {
@@ -123,25 +123,25 @@
     {
       "name" : "HS_1",
       "locationType" : "LECTURE",
-      "limit" : 400,
+      "limit" : 200,
       "polygon" : "POLYGON((458 434, 473 406, 505 400, 529 416, 526 444, 503 461, 477 460, 458 434))"
     },
     {
       "name" : "HS_2",
       "locationType" : "LECTURE",
-      "limit" : 400,
+      "limit" : 80,
       "polygon" : "POLYGON((442 484, 456 498, 442 511, 429 497, 442 484))"
     },
     {
       "name" : "HS_3",
       "locationType" : "LECTURE",
-      "limit" : 400,
+      "limit" : 80,
       "polygon" : "POLYGON((364 461, 378 474, 364 488, 351 474, 364 461))"
     },
     {
       "name" : "einhornsee",
       "locationType" : "LEISURE",
-      "limit" : 50,
+      "limit" : 15,
       "polygon" : "POLYGON((470 200, 520 210, 511 236, 465 228, 470 200))"
     },
     {

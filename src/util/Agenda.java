@@ -7,6 +7,7 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
 
+
 public class Agenda {
 
     static int nHosts, dayStart, dayEnd, meanArrivalTime, meanStayDuration, agendaAssignmentCounter;
@@ -14,14 +15,21 @@ public class Agenda {
     static Random rand = new Random();
     static final List<Location> locations;
     static String[][] agendaTable;
+    static List<Integer> timeslotBase = new ArrayList<>();
+    static int timeslotLength;
+    static int scenarioEndTime;
 
     private final String[] agenda;
-    private final int agendaIndex;
+    private final int[] timeSlots = new int[dayEnd-dayStart];
 
     public Agenda() {
-        this.agendaIndex = agendaAssignmentCounter;
         this.agenda = agendaTable[agendaAssignmentCounter];
         agendaAssignmentCounter++;
+        Collections.shuffle(timeslotBase);
+        for(int i = 0; i < timeSlots.length-1; i++) {
+            timeSlots[i] = timeslotBase.get(i) + timeslotLength*i;
+        }
+        timeSlots[timeSlots.length-1] = timeSlots.length * timeslotLength;
     }
 
     private enum LocationTypes {ENTRANCE, MENSA, TUTORIAL, LECTURE, STUDY, LEISURE, ROUTING, DEFAULT}
@@ -88,10 +96,16 @@ public class Agenda {
                 case DEFAULT -> chosenList = defaultList;
                 default -> chosenList = leisureList;
             }
-            for (Location location : chosenList) {
-                if (!location.isFull(index)) {return location.assignPlace(index);}
+            if (chosenList.isEmpty()) {
+                return getLocation(LocationTypes.DEFAULT, index);
             }
-            return getLocation(LocationTypes.DEFAULT, index);
+            int locationIndex = new Random().nextInt(chosenList.size());
+            Location location = chosenList.get(locationIndex);
+            if (!location.isFull(index)) {return location.assignPlace(index);}
+            else {
+                chosenList.remove(locationIndex);
+                return(getLocation(locationType, index));
+            }
         }
 
         public String getEntrance() {
@@ -141,6 +155,8 @@ public class Agenda {
         shareLeisure = Double.parseDouble(prop.getProperty("shareLeisure"));
         shareLecture = Double.parseDouble(prop.getProperty("shareLecture"));
         shareTutorial = Double.parseDouble(prop.getProperty("shareTutorial"));
+        scenarioEndTime = Integer.parseInt(prop.getProperty("Scenario.endTime"));
+        timeslotLength = scenarioEndTime / (dayEnd-dayStart);
 
         locations = jsonLocations;
         assert locations != null;
@@ -150,9 +166,14 @@ public class Agenda {
 
         List<List<LocationTypes>> tmp = assignLocationTypes();
         assignLocations(tmp);
+        Random rand = new Random();
+        for(int i = 0; i < dayEnd-dayStart-1; i++){
+            timeslotBase.add((int) ((rand.nextDouble()*(1.2-0.8) + 0.8) * timeslotLength));
+        }
     }
 
     public String[] getAgenda() {return this.agenda;}
+    public int[] getTimeSlots(){return this.timeSlots;}
 
     private static List<List<LocationTypes>> assignLocationTypes() {
         List<List<LocationTypes>> agendaTable = new ArrayList<>();
@@ -207,6 +228,10 @@ public class Agenda {
     }
 
     public static void main(String[] args){
-        System.out.println(Arrays.deepToString(agendaTable));
+        for(int i = 0; i < 100; i ++){
+            Agenda agenda = new Agenda();
+            System.out.println(Arrays.toString(agenda.timeSlots));
+        }
+
     }
 }

@@ -1,27 +1,27 @@
 package movement;
 
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import core.Coord;
 import core.Settings;
 import core.SimClock;
-import util.Agenda;
-
-import java.io.IOException;
-import java.util.*;
-import java.io.File;
-
 import movement.map.UniGraph;
 import org.jgrapht.alg.util.Pair;
-import org.locationtech.jts.geom.*;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
+import util.Agenda;
 
-import com.google.gson.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 public class TestMovement extends MovementModel{
 
     private GeometryFactory gf = new GeometryFactory();
     private static List<UniHub> vertices;
     private static UniGraph graph;
-    private static UniHub genesis;
+    private UniHub genesis;
     private UniHub current, goal;
     private List<UniHub> route = null;
     private int route_index = 0;
@@ -31,12 +31,12 @@ public class TestMovement extends MovementModel{
     private boolean switcher;
     private String[] agenda;
     private static HashMap<String, UniHub> locationMap = new HashMap<String, UniHub>();
+    private double timeDeviation;
 
     private static int id_global=0;
     private int id=0;
-    // TODO: get time slot size from settings
-    // TODO: get time slot time by
-    private int timeSlot = 1000;
+
+    private int[] timeSlots;
 
     private static boolean parsed = false;
     private static UniGraph fmi;
@@ -44,9 +44,10 @@ public class TestMovement extends MovementModel{
     private String wktPath;
     //private UniHub hub.getName();
 
+
     @Override
     public Path getPath() {
-        if((int) clock.getTime() / timeSlot > current_index){
+        if((int) SimClock.getTime() > timeSlots[current_index]){
             current = locationMap.get(agenda[current_index]);
             current_index ++;
             goal = locationMap.get(agenda[current_index]);
@@ -55,6 +56,7 @@ public class TestMovement extends MovementModel{
 
         }
 
+        /*
         if(route != null){
             current = route.get(route_index);
             route_index++;
@@ -63,7 +65,7 @@ public class TestMovement extends MovementModel{
                 route_index = 0;
             }
         }
-
+        */
         Point pt;
         Coordinate c;
 
@@ -136,8 +138,6 @@ public class TestMovement extends MovementModel{
             parsed = true;
             System.out.println("parsed!");
         }
-        genesis = locationMap.get(agenda[0]);
-        current = genesis;
         clock = SimClock.getInstance();
         switcher = true;
         System.out.println(vertices);
@@ -145,11 +145,13 @@ public class TestMovement extends MovementModel{
 
     public TestMovement(TestMovement other){
         super(other);
-        this.agenda = new Agenda().getAgenda();
-        this.genesis = other.genesis;
-        this.current = other.current;
+        Agenda a = new Agenda();
+        this.agenda = a.getAgenda();
+        this.genesis = locationMap.get(agenda[0]);
+        this.current = genesis;
         this.clock = other.clock;
         this.switcher = other.switcher;
+        this.timeSlots = a.getTimeSlots();
     }
 
     @Override
