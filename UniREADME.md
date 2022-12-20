@@ -44,4 +44,4 @@ Alternatively, you can use maven to get all dependencies.
 ## Run the Simulation
 To run the simulation, you only need to set the `test_settings.txt`
 file as a program's arguments. Then simply run the simulator as usual
-by starting `DTNSim`.
+by starting `DTNSim`. For a more enjoyable experience activate the underlay.
