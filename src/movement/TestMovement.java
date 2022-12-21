@@ -28,22 +28,11 @@ public class TestMovement extends MovementModel{
     private int current_index = 0;
     private Coord lastWaypoint;
     private SimClock clock;
-    private boolean switcher;
     private String[] agenda;
     private static HashMap<String, UniHub> locationMap = new HashMap<String, UniHub>();
-    private double timeDeviation;
-
-    private static int id_global=0;
-    private int id=0;
-
     private int[] timeSlots;
-
     private static boolean parsed = false;
-    private static UniGraph fmi;
-
-    private String wktPath;
-    //private UniHub hub.getName();
-
+    private String wktPath; //maybe rename to jsonPath or smth
 
     @Override
     public Path getPath() {
@@ -86,12 +75,6 @@ public class TestMovement extends MovementModel{
 
     @Override
     public Coord getInitialLocation() {
-        /*
-        this.id = id_global;
-        id_global++;
-        System.out.println(id);
-        */
-
         Point pt;
         Coordinate c;
 
@@ -117,7 +100,6 @@ public class TestMovement extends MovementModel{
             String content;
             try {
                 content = new Scanner(new File(this.wktPath)).useDelimiter("\\Z").next();
-                //System.out.println(content);
             } catch (IOException e) {
                 System.err.println(e);
                 return;
@@ -130,7 +112,6 @@ public class TestMovement extends MovementModel{
             for(UniHub hub : vertices) {
                 locationMap.put(hub.getName(), hub);
             }
-            //System.out.println(jsonObject.get("vertices"));
 
             // DONE: deserialize edges
             List<Pair<UniHub, UniHub>> edges = deserializeEdges(jsonObject.get("edges"), vertices);
@@ -140,8 +121,7 @@ public class TestMovement extends MovementModel{
             System.out.println("parsed!");
         }
         clock = SimClock.getInstance();
-        switcher = true;
-        System.out.println(vertices);
+        //TODO: add agenda and timeSlots here
     }
 
     public TestMovement(TestMovement other){
@@ -151,7 +131,6 @@ public class TestMovement extends MovementModel{
         this.genesis = locationMap.get(agenda[0]);
         this.current = genesis;
         this.clock = other.clock;
-        this.switcher = other.switcher;
         this.timeSlots = a.getTimeSlots();
     }
 
