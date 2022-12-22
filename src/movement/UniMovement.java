@@ -16,13 +16,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class TestMovement extends MovementModel{
+public class UniMovement extends MovementModel{
 
     private GeometryFactory gf = new GeometryFactory();
-    private static List<UniHub> vertices;
     private static UniGraph graph;
     private UniHub genesis;
-    private UniHub current, goal;
+    private UniHub current;
+    private UniHub goal;
     private List<UniHub> route = null;
     private int route_index = 0;
     private int current_index = 0;
@@ -32,7 +32,15 @@ public class TestMovement extends MovementModel{
     private static HashMap<String, UniHub> locationMap = new HashMap<String, UniHub>();
     private int[] timeSlots;
     private static boolean parsed = false;
-    private String wktPath; //maybe rename to jsonPath or smth
+
+    public record UniHub(Geometry polygon, String name) {
+        @Override
+            public String toString() {
+                return String.format(
+                        "[UniHub: name=%1$s, polygon=%2$s]",
+                        name, polygon);
+            }
+    }
 
     @Override
     public Path getPath() {
@@ -62,7 +70,7 @@ public class TestMovement extends MovementModel{
         do {
             c = randomCoordinate();
             pt = gf.createPoint(c);
-        }while (!current.getPolygon().contains(pt));
+        }while (!current.polygon().contains(pt));
 
         final Path p;
         p = new Path( super.generateSpeed() );
@@ -81,25 +89,25 @@ public class TestMovement extends MovementModel{
         do {
             c = randomCoordinate();
             pt = gf.createPoint(c);
-        }while (!genesis.getPolygon().contains(pt));
+        }while (!genesis.polygon().contains(pt));
 
         this.lastWaypoint = convert(c);
         return convert(c);
     }
 
-    public TestMovement(Settings settings){
+    public UniMovement(Settings settings){
         super(settings);
 
         if(!parsed) {
-            this.wktPath = settings.getSetting("wktPath", null);
-            if (wktPath == null) {
+            String jsonPath = settings.getSetting("wktPath", null);
+            if (jsonPath == null) {
                 System.err.println("wktPath is null.");
                 return;
             }
 
             String content;
             try {
-                content = new Scanner(new File(this.wktPath)).useDelimiter("\\Z").next();
+                content = new Scanner(new File(jsonPath)).useDelimiter("\\Z").next();
             } catch (IOException e) {
                 System.err.println(e);
                 return;
@@ -108,9 +116,9 @@ public class TestMovement extends MovementModel{
             // DONE: filter out vertices
             Gson gson = new Gson();
             JsonObject jsonObject = gson.fromJson(content, JsonObject.class);
-            vertices = deserializeVertices(jsonObject.get("vertices"));
+            List<UniHub> vertices = deserializeVertices(jsonObject.get("vertices"));
             for(UniHub hub : vertices) {
-                locationMap.put(hub.getName(), hub);
+                locationMap.put(hub.name(), hub);
             }
 
             // DONE: deserialize edges
@@ -121,13 +129,13 @@ public class TestMovement extends MovementModel{
             System.out.println("parsed!");
         }
         clock = SimClock.getInstance();
-        //TODO: add agenda and timeSlots here
     }
 
-    public TestMovement(TestMovement other){
+    public UniMovement(UniMovement other){
         super(other);
         Agenda a = new Agenda();
         this.agenda = a.getAgenda();
+        //this.agenda = new String[] {"interims", "interims", "interims", "interims", "interims", "interims", "interims", "interims", "interims", "interims", "interims", "interims", "interims", "interims", "interims", "interims", "interims"};
         this.genesis = locationMap.get(agenda[0]);
         this.current = genesis;
         this.clock = other.clock;
@@ -136,7 +144,7 @@ public class TestMovement extends MovementModel{
 
     @Override
     public MovementModel replicate() {
-        return new TestMovement(this);
+        return new UniMovement(this);
     }
 
     private Coord convert(Coordinate c){
@@ -160,10 +168,7 @@ public class TestMovement extends MovementModel{
         gsonBuilder.registerTypeAdapter(Geometry.class, new GeometryDeserializer());
 
         Gson gson = gsonBuilder.create();
-        //Warning: the following line might have severe consequences on your mental health
-        List<UniHub> ret = Arrays.asList(gson.fromJson(jsonInput, UniHub[].class));
-
-        return ret;
+        return Arrays.asList(gson.fromJson(jsonInput, UniHub[].class));
     }
 
     private List<Pair<UniHub, UniHub>> deserializeEdges(JsonElement jsonInput, List<UniHub> hubs){
@@ -176,10 +181,16 @@ public class TestMovement extends MovementModel{
 
         List<Pair<UniHub, UniHub>> ret = new ArrayList<>();
         for(edge e : edges){
-            UniHub first = hubs.stream().filter(hub -> e.first.equals(hub.getName())).findFirst().orElse(null);
-            UniHub second = hubs.stream().filter(hub -> e.second.equals(hub.getName())).findFirst().orElse(null);
+            UniHub first = hubs.stream().filter(hub -> e.first.equals(hub.name())).findFirst().orElse(null);
+            UniHub second = hubs.stream().filter(hub -> e.second.equals(hub.name())).findFirst().orElse(null);
             ret.add(new Pair<>(first, second));
         }
         return ret;
     }
+
+    public static void reset() {
+        Agenda.reset();
+    }
+
+
 }

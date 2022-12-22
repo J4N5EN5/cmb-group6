@@ -40,8 +40,8 @@ public class DTNSim {
 	 * @param args Command line arguments
 	 */
 	public static void main(String[] args) {
-		boolean batchMode = false;
-		int nrofRuns[] = {0,1};
+		boolean batchMode = true;
+		int nrofRuns[] = {0,30};
 		String confFiles[];
 		int firstConfIndex = 0;
 		int guiIndex = 0;

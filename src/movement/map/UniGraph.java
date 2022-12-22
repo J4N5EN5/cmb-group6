@@ -1,6 +1,6 @@
 package movement.map;
 
-import movement.UniHub;
+import movement.UniMovement.UniHub;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.alg.util.Pair;

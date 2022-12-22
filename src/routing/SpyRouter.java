@@ -12,9 +12,9 @@ public class SpyRouter extends ActiveRouter {
 
     /**
      * Neighboring message count -setting id ({@value}). Two comma
-     * separated values: min and max. Only if the amount of connected nodes
-     * with the given message is between the min and max value, the message
-     * is accepted for transfer and kept in the buffer.
+     * separated values: min other spies, min counter spies.
+     * min other spies is the limit to receive messages from other spies
+     * while min counter spies is the limit to disrupt information transfers and to corrupt spies
      */
     public static final String NM_COUNT_S = "nmcount";
     private int countRange[];
@@ -40,6 +40,11 @@ public class SpyRouter extends ActiveRouter {
         this.countRange = r.countRange;
     }
 
+    /**
+    Initialize the different spies. The first initialized spy is sending an emergency message while the rest send
+     Information Transfers. An appropriate message is created and added. The id consists of the type-string
+     concatenated with the node's id.
+     */
     @Override
     public void init(DTNHost host, List<MessageListener> mListeners){
         super.init(host, mListeners);
@@ -56,8 +61,16 @@ public class SpyRouter extends ActiveRouter {
     }
 
     /**
-     * Counts how many of the connected peers have the given message
-     * @return Amount of connected peers with the message
+     * This method counts the message types connected peers try to send and based on these counts, decide what messages to accept.
+     * 1) In case a node sends either a disruption signal or an information transfer signal, no incoming messages are accepted.
+     * 2) In case at least one connected node sends an emergency signal while at least two connected nodes either send an emergency signal or an information
+     *      transfer signal and less than 5 connected nodes try to send disruption signals, accept the emergency signal
+     * 3) In case the only connected nodes are ones sending a disruption signal while there are more than 5 of them, accept the disruption signal.
+     * 4) In case at least one connected node tries to send an emergency signal and if more than 5 nodes try to disrupt it, accept no messages.
+     *      In this case, a new message is created that indicates that the transfer failed.
+     * 5) If at least two connected nodes try to send an information transfer, accept it.
+     * 6) Default deny connections.
+     * @return The string-type of the message to accept
      */
     private String getDominantId() {
         DTNHost me = getHost();
@@ -76,20 +89,36 @@ public class SpyRouter extends ActiveRouter {
             }
 
         }
-        if (informationTransferCount > 0 && informationTransferCount + emergencySignalCount > 2 && disruptionSignalCount < 5){
+        if(this.currentlySendingMessageType.equals("disruptionSignal") || this.currentlySendingMessageType.equals("emergencySignal")){
+            dominantId = "None";
+        }
+        else if (emergencySignalCount > 0 && informationTransferCount + emergencySignalCount > countRange[0]-1 && disruptionSignalCount < countRange[1]){
             dominantId = "emergencySignal";
-        } else if (disruptionSignalCount >  2*emergencySignalCount + informationTransferCount) {
+        }
+        else if (emergencySignalCount + informationTransferCount == 0 && disruptionSignalCount > countRange[1]){
             dominantId = "disruptionSignal";
-        } else {
+        }
+        else if (emergencySignalCount + informationTransferCount > 0 && disruptionSignalCount > countRange[1]) {
+            Message message = new Message(this.getHost(), this.getHost(), "transferDisrupted" + this.getHost().getAddress(), 100);
+            this.createNewMessage(message);
+        }
+        else if (informationTransferCount > countRange[0]-1){
             dominantId = "informationTransfer";
+        } else{
+            dominantId = "None";
         }
         return dominantId;
     }
 
+    /**
+     * Here, we only accept the messages that correspond to the message string-type returned by getDominantId()
+     * @param m The message to check
+     * @param from Host the message was from (previous hop)
+     * @return Receiving Policy
+     */
     @Override
     protected int checkReceiving(Message m, DTNHost from) {
         String dominantId = getDominantId();
-        System.out.println(dominantId);
 
         if (!from.getRouter().hasMessage(dominantId + "_" + from.getAddress())) {
             return DENIED_POLICY;
@@ -99,11 +128,25 @@ public class SpyRouter extends ActiveRouter {
         return super.checkReceiving(m, from);
     }
 
+    /**
+     * In case an emergency signal or a disruption signal is received, create a new message of the respective type with the
+     * message id containing the id of the recipient.
+     * @param id id of the transferred message
+     * @param from Host the message was from (previous hop)
+     */
     @Override
     public Message messageTransferred(String id, DTNHost from) {
+        // In case a disruption signal was transferred, create a new, own disruption signal and set currently send message to disruption signal
         if(id.startsWith("disruptionSignal")){
             Message message = new Message(this.getHost(), this.getHost(), "disruptionSignal_" + this.getHost().getAddress(), 100);
             this.createNewMessage(message);
+            this.currentlySendingMessageType = "disruptionSignal";
+        }
+        // In case a new emergency signal was transferred, create a new, own emergency signal and set currently send message to emergency signal
+        else if(id.startsWith("emergencySignal")) {
+            Message message = new Message(this.getHost(), this.getHost(), "emergencySignal_" + this.getHost().getAddress(), 100);
+            this.createNewMessage(message);
+            this.currentlySendingMessageType = "emergencySignal";
         }
         return super.messageTransferred(id, from);
 
@@ -120,16 +163,24 @@ public class SpyRouter extends ActiveRouter {
         this.sendSelectiveMessages();
     }
 
-    protected Connection sendSelectiveMessages(){
+    /**
+     * In case a disruption signal or emergency signal is currently sent, only send the one belonging to the sender.
+     * In case an information transfer signal is sent, send all the router has got.
+     */
+    protected void sendSelectiveMessages(){
         List<Connection> connections = getConnections();
         if (connections.size() == 0 || this.getNrofMessages() == 0) {
-            return null;
+            return;
         }
         List<Message> messages =
                 new ArrayList<Message>();
         if(currentlySendingMessageType.equals("disruptionSignal")){
+            // send own disruption signal
             messages.add(this.getMessage("disruptionSignal_" + this.getHost().getAddress()));
+        } else if(currentlySendingMessageType.equals("emergencySignal")) {
+            messages.add(this.getMessage("emergencySignal_" + this.getHost().getAddress()));
         } else {
+            // Transfer all currently holding information transfer messages to propagate collected information
             for (Message message : this.getMessageCollection()) {
                 if (message.getId().startsWith(currentlySendingMessageType)) {
                     messages.add(message);
@@ -137,7 +188,7 @@ public class SpyRouter extends ActiveRouter {
             }
             this.sortByQueueMode(messages);
         }
-        return tryMessagesToConnections(messages, connections);
+        tryMessagesToConnections(messages, connections);
     }
 
 

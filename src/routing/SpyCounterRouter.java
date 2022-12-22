@@ -15,8 +15,6 @@ public class SpyCounterRouter extends ActiveRouter{
      * with the given message is between the min and max value, the message
      * is accepted for transfer and kept in the buffer.
      */
-    public static final String NM_COUNT_S = "nmcount";
-    private static boolean emergencyAgent = true;
 
     /**
      * Constructor. Creates a new message router based on the settings in
@@ -35,6 +33,10 @@ public class SpyCounterRouter extends ActiveRouter{
         super(r);
     }
 
+    /**
+     *Spy counter routers try to send a single disruption signal to all connected nodes.
+     * The disruption signal id contains the node's id.
+     */
     @Override
     public void init(DTNHost host, List<MessageListener> mListeners){
         super.init(host, mListeners);

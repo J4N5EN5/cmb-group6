@@ -8,20 +8,22 @@ or created to make our simulation work.
 the-one-group-6 <br>
 ├── data <br>
 │ &nbsp; &nbsp; ├── FMI_building_v3.png <br>
-│ &nbsp; &nbsp; └── test.json <br>
+│ &nbsp; &nbsp; └── fmi_locations.json <br>
+├── example_settings <br>
+│ &nbsp; &nbsp; └── spy_settings.txt <br>
 ├── src<br>
 │ &nbsp; &nbsp; ├── movement<br>
-│ &nbsp; &nbsp; │ &nbsp; &nbsp; ├── TestMovement.java<br>
-│ &nbsp; &nbsp; │ &nbsp; &nbsp; ├── UniGraph.java<br>
-│ &nbsp; &nbsp; │ &nbsp; &nbsp; └── UniHub.java<br>
+│ &nbsp; &nbsp; │ &nbsp; &nbsp; ├── map <br>
+│ &nbsp; &nbsp; │ &nbsp; &nbsp; │ &nbsp; &nbsp; └── UniGraph.java<br>
+│ &nbsp; &nbsp; │ &nbsp; &nbsp; ├── UniMovement.java<br>
 │ &nbsp; &nbsp; ├── report<br>
 │ &nbsp; &nbsp; │ &nbsp; &nbsp; └── UniReport.java<br>
 │ &nbsp; &nbsp; ├── routing<br>
 │ &nbsp; &nbsp; │ &nbsp; &nbsp; ├── SpyCounterRouter.java<br>
 │ &nbsp; &nbsp; │ &nbsp; &nbsp; └── SpyRouter.java<br>
-│ &nbsp; &nbsp; └── util<br>
-│ &nbsp; &nbsp; &ensp; &nbsp; &nbsp; &nbsp; └── AgendaCreator.java<br>
-└── test_settings.txt<br>
+└── └── util<br>
+ &nbsp; &ensp; &nbsp; &ensp; &nbsp; &ensp; └── Agenda.java<br>
+
 
 ## External Libraries
 Our implementation uses several external libraries. In the table
@@ -42,6 +44,6 @@ then hit the `+`-sign and `Java`, select the library and import it.
 Alternatively, you can use maven to get all dependencies.
 
 ## Run the Simulation
-To run the simulation, you only need to set the `test_settings.txt`
+To run the simulation, you only need to set the `example_settings/spy_settings.txt`
 file as a program's arguments. Then simply run the simulator as usual
 by starting `DTNSim`. For a more enjoyable experience activate the underlay.
