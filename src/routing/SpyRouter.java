@@ -1,9 +1,11 @@
 package routing;
 
 import core.*;
+import util.Agenda;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Router module mimicking the game-of-life behavior
@@ -191,10 +193,19 @@ public class SpyRouter extends ActiveRouter {
         tryMessagesToConnections(messages, connections);
     }
 
+    static {
+        DTNSim.registerForReset(SpyRouter.class.getCanonicalName());
+        reset();
+    }
+
 
     @Override
     public SpyRouter replicate() {
         return new SpyRouter(this);
+    }
+
+    public static void reset() {
+        emergencyAgent = true;
     }
 
 }
