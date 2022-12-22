@@ -95,7 +95,7 @@ public class SpyRouter extends ActiveRouter {
         else if (emergencySignalCount > 0 && informationTransferCount + emergencySignalCount > countRange[0]-1 && disruptionSignalCount < countRange[1]){
             dominantId = "emergencySignal";
         }
-        else if (emergencySignalCount + informationTransferCount == 0 && disruptionSignalCount > countRange[1]){
+        else if (emergencySignalCount + informationTransferCount == 0 && disruptionSignalCount >= countRange[1]){
             dominantId = "disruptionSignal";
         }
         else if (emergencySignalCount + informationTransferCount > 0 && disruptionSignalCount > countRange[1]) {
