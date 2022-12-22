@@ -18,22 +18,21 @@ import java.util.*;
 
 public class UniMovement extends MovementModel{
 
-    private static GeometryFactory gf = new GeometryFactory();
+    private final static GeometryFactory gf = new GeometryFactory();
     //UniGraph contains the graph we use for routing and dijkstra
     private static UniGraph graph;
     //Hub the node currently resides in
     private UniHub current;
-    //Hub that is the nodes destination; set during timeslot
+    //Hub that is the node's destination; set during timeslot
     private UniHub goal;
     //Route the node needs to take to get to goal
     private List<UniHub> route = null;
     private int route_index = 0;
     private int current_index = 0;
     private Coord lastWaypoint;
-    private static SimClock clock;
     private String[] agenda;
     //Just a helper Map to get the UniHub corresponding the name
-    private final static HashMap<String, UniHub> locationMap = new HashMap<String, UniHub>();
+    private final static HashMap<String, UniHub> locationMap = new HashMap<>();
     private int[] timeSlots;
     //Just helps to only initialize static stuff
     private static boolean parsed = false;
@@ -78,7 +77,7 @@ public class UniMovement extends MovementModel{
             }
         }
 
-        //ProhibitedPolygonRWP inside of UniHubs
+        //ProhibitedPolygonRWP inside UniHubs
         Point pt;
         Coordinate c;
 
@@ -129,7 +128,8 @@ public class UniMovement extends MovementModel{
             try {
                 content = new Scanner(new File(jsonPath)).useDelimiter("\\Z").next();
             } catch (IOException e) {
-                System.err.println(e);
+                //System.err.println(e);
+                e.printStackTrace();
                 return;
             }
 
@@ -146,8 +146,6 @@ public class UniMovement extends MovementModel{
             //Now we can create a new UniGraph from the parsed Edges and Vertices
             graph = new UniGraph(vertices, edges);
             parsed = true;
-            clock = SimClock.getInstance();
-            //System.out.println("parsed!");
         }
         Agenda a = new Agenda();
         this.agenda = a.getAgenda();
@@ -203,7 +201,7 @@ public class UniMovement extends MovementModel{
 
     /**
      * Since we define our UniGraph by using a JSON file, we need to deserialize the edges.
-     * This functions take sthe previously deserialized vertices and matches the name of the UniHub to
+     * This function takes the previously deserialized vertices and matches the name of the UniHub to
      * the defined names in the JSON file and then creates a Pair of UniHubs.
      * This Pair represents an edge between two vertices on the graph.
      * @param jsonInput edges in JSON format
@@ -220,7 +218,7 @@ public class UniMovement extends MovementModel{
 
         List<Pair<UniHub, UniHub>> ret = new ArrayList<>();
         for(edge e : edges){
-            //This just uses hubs and filters fo the name to be equal, ugly but it works
+            //This just uses hubs and filters fo the name to be equal; ugly but it works
             UniHub first = hubs.stream().filter(hub -> e.first.equals(hub.name())).findFirst().orElse(null);
             UniHub second = hubs.stream().filter(hub -> e.second.equals(hub.name())).findFirst().orElse(null);
             ret.add(new Pair<>(first, second));

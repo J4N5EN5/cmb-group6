@@ -1,11 +1,9 @@
 package routing;
 
 import core.*;
-import util.Agenda;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Router module mimicking the game-of-life behavior
@@ -175,7 +173,7 @@ public class SpyRouter extends ActiveRouter {
             return;
         }
         List<Message> messages =
-                new ArrayList<Message>();
+                new ArrayList<>();
         if(currentlySendingMessageType.equals("disruptionSignal")){
             // send own disruption signal
             messages.add(this.getMessage("disruptionSignal_" + this.getHost().getAddress()));
