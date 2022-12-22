@@ -187,10 +187,4 @@ public class UniMovement extends MovementModel{
         }
         return ret;
     }
-
-    public static void reset() {
-        Agenda.reset();
-    }
-
-
 }

@@ -9,12 +9,6 @@ import java.util.List;
 
 public class SpyCounterRouter extends ActiveRouter{
 
-    /**
-     * Neighboring message count -setting id ({@value}). Two comma
-     * separated values: min and max. Only if the amount of connected nodes
-     * with the given message is between the min and max value, the message
-     * is accepted for transfer and kept in the buffer.
-     */
 
     /**
      * Constructor. Creates a new message router based on the settings in

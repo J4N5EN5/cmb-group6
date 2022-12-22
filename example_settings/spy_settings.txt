@@ -42,6 +42,7 @@ Group3.router = PassiveRouter
 
 
 # Report Settings
+
 Report.nrofReports = 1
 # length of the warm up period (simulated seconds)
 Report.warmup = 0
@@ -49,6 +50,7 @@ Report.warmup = 0
 Report.reportDir = reports/
 # Report classes to load
 Report.report1 = UniReport
+UniReport.interval = 30
 
 # GUI Settings
 GUI.UnderlayImage.fileName = data/FMI_building_v3.png
@@ -57,7 +59,7 @@ GUI.UnderlayImage.scale = 1
 
 # Agenda specific Settings
 # nHosts has to be adjusted to the further above created number of hosts
-nHosts = 5000
+nHosts = 1000
 dayStart = 5
 dayEnd = 22
 meanArrivalTime = 5

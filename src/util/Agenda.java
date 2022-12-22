@@ -5,6 +5,8 @@ import java.nio.file.Paths;
 import java.util.*;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import core.DTNSim;
+import core.SimClock;
 
 /**
  * This class is a helper for the UniMovement model. It is a variation of the Working Day Model and used to
@@ -220,16 +222,9 @@ public class Agenda {
 
         locations = jsonLocations;
         assert locations != null;
-        for(Location location: locations){
-            location.setLimits();
-        }
 
-        List<List<LocationTypes>> tmp = assignLocationTypes();
-        assignLocations(tmp);
-        Random rand = new Random();
-        for(int i = 0; i < dayEnd-dayStart-1; i++){
-            timeslotBase.add((int) ((rand.nextDouble()*(1.2-0.8) + 0.8) * timeslotLength));
-        }
+        DTNSim.registerForReset(Agenda.class.getCanonicalName());
+        reset();
     }
 
     public String[] getAgenda() {return this.agenda;}
@@ -312,6 +307,11 @@ public class Agenda {
 
     public static void reset() {
 
+        for(Location location : locations) {
+            location.limits = new ArrayList<>();
+            location.setLimits();
+        }
+
         for(Location location: locations){
             location.setLimits();
         }
@@ -322,6 +322,7 @@ public class Agenda {
         for(int i = 0; i < dayEnd-dayStart-1; i++){
             timeslotBase.add((int) ((rand.nextDouble()*(1.2-0.8) + 0.8) * timeslotLength));
         }
+
         agendaAssignmentCounter = 0;
         System.out.println("Reset");
     }
