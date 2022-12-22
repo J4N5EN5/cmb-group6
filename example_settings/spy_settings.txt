@@ -50,7 +50,7 @@ Report.warmup = 0
 Report.reportDir = reports/
 # Report classes to load
 Report.report1 = UniReport
-UniReport.interval = 30
+#UniReport.interval = 30
 
 # GUI Settings
 GUI.UnderlayImage.fileName = data/FMI_building_v3.png
